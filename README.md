@@ -13,27 +13,34 @@ aufeinander auf.
 
 ## Ordnerstruktur
 
-Die leeren Ordner geben die erwartete Struktur vor. Halte dich daran —
-die automatische Pruefung sucht die Dateien genau dort.
+Alle Dateien gehoeren ins **Wurzel-Verzeichnis** dieses Repos bzw. in
+`.github/workflows/` — nur dort fuehrt GitHub Actions Workflows aus. Lege
+keine Unterordner pro Uebung an; die automatische Pruefung sucht die
+Dateien genau hier.
 
 ```
-tag16/uebung01-ci-build/.github/workflows/
+app.py                          # Uebung 1: Anwendung (z. B. Flask, Port 8080)
+requirements.txt                # Uebung 1
+Dockerfile                      # Uebung 1
+.github/workflows/aufgabe1.yml  # Uebung 1: CI-Build
+.github/workflows/aufgabe2.yml  # Uebung 2: Push zu AWS ECR
+.github/workflows/aufgabe3.yml  # Uebung 3: Deploy zu AWS ECS
+DOKUMENTATION.md                # deine Pipeline-Doku
 ```
 
 ## Aufgaben
 
 ### Uebung 1 — Automatisierter Build mit GitHub Actions (CI-Pipeline)
 
-- Lege unter `tag16/uebung01-ci-build/` eine kleine Anwendung an:
-  `app.py` (z. B. Flask, Port 8080), `requirements.txt` und ein
-  `Dockerfile`.
-- Lege `tag16/uebung01-ci-build/.github/workflows/aufgabe1.yml` an, das das
-  Container-Image baut (`docker/setup-buildx-action` und
-  `docker/build-push-action` oder `docker build`).
+- Lege im Wurzel-Verzeichnis eine kleine Anwendung an: `app.py`
+  (z. B. Flask, Port 8080), `requirements.txt` und ein `Dockerfile`.
+- Lege `.github/workflows/aufgabe1.yml` an, das das Container-Image baut
+  (`docker/setup-buildx-action` und `docker/build-push-action` oder
+  `docker build`).
 
 ### Uebung 2 — Container Registry: Image-Push zu AWS ECR
 
-- Erweitere die Pipeline zu `aufgabe2.yml`.
+- Erweitere die Pipeline zu `.github/workflows/aufgabe2.yml`.
 - Authentifiziere dich mit `aws-actions/configure-aws-credentials@v4` und
   den Secrets `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
 - Melde dich mit `aws-actions/amazon-ecr-login` an und pushe das Image in
@@ -41,12 +48,12 @@ tag16/uebung01-ci-build/.github/workflows/
 
 ### Uebung 3 — Continuous Deployment auf AWS ECS
 
-- Erweitere die Pipeline zu `aufgabe3.yml`.
+- Erweitere die Pipeline zu `.github/workflows/aufgabe3.yml`.
 - Aktualisiere die ECS Task Definition und den Service
   (`aws-actions/amazon-ecs-deploy-task-definition` oder
   `aws ecs update-service`).
 - Benoetigte Variablen: `ECS_CLUSTER`, `ECS_SERVICE`, `ECS_TASK_DEFINITION`.
-- Dokumentiere die Pipeline in `tag16/README.md`.
+- Dokumentiere die Pipeline in `DOKUMENTATION.md`.
 
 ## Abnahmekriterien
 
@@ -59,17 +66,17 @@ nichts von Hand pflegen — beim naechsten Push wird die Liste ueberschrieben.
 **Fortschritt: 0 / 11 Kriterien erfüllt** ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ — Stand: 2026-08-23 22:08 UTC.
 <!-- /c50:progress -->
 
-- [ ] ⬜ Übung 1: Anwendung vorhanden (tag16/uebung01-ci-build/app.py)
-- [ ] ⬜ Übung 1: Dockerfile vorhanden (tag16/uebung01-ci-build/)
-- [ ] ⬜ Übung 1: Workflow vorhanden (tag16/uebung01-ci-build/.github/workflows/)
+- [ ] ⬜ Übung 1: Anwendung vorhanden (app.py im Wurzel-Verzeichnis)
+- [ ] ⬜ Übung 1: Dockerfile vorhanden (Wurzel-Verzeichnis)
+- [ ] ⬜ Übung 1: Workflow vorhanden (.github/workflows/)
 - [ ] ⬜ Übung 1: Container-Image wird im Workflow gebaut
 - [ ] ⬜ Übung 2: Workflow mit ECR-Bezug vorhanden
 - [ ] ⬜ Übung 2: AWS-Credentials als GitHub Secrets referenziert
 - [ ] ⬜ Übung 2: ECR-Login und Image-Push vorhanden
 - [ ] ⬜ Übung 3: Workflow mit ECS-Deployment vorhanden
 - [ ] ⬜ Übung 3: ECS-Service wird aktualisiert (Deploy-Schritt)
-- [ ] ⬜ Doku: tag16/README.md vorhanden
-- [ ] ⬜ Doku: tag16/README.md hat ausreichend Inhalt (mind. 100 Wörter)
+- [ ] ⬜ Doku: DOKUMENTATION.md vorhanden
+- [ ] ⬜ Doku: DOKUMENTATION.md hat ausreichend Inhalt (mind. 100 Wörter)
 
 Zusaetzlich manuell abgenommen (nicht automatisch geprueft):
 
@@ -104,5 +111,5 @@ letzter Run → Job *Abnahmekriterien pruefen*.
 ## Musterloesung
 
 Nach dem Unterricht findest du die Musterloesung im Repository
-[`tbzdevops/musterloesungen-praxisauftraege`](https://github.com/tbzdevops/musterloesungen-praxisauftraege/tree/day_16_solution/tag16)
+[`tbzdevops/musterloesungen-praxisauftraege`](https://github.com/tbzdevops/musterloesungen-praxisauftraege/tree/day_16_solution)
 auf dem Branch `day_16_solution`.
