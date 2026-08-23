@@ -63,7 +63,7 @@ sobald eine Aenderung es wieder bricht, verschwindet der Haken. Du musst hier
 nichts von Hand pflegen — beim naechsten Push wird die Liste ueberschrieben.
 
 <!-- c50:progress -->
-**Fortschritt: 0 / 11 Kriterien erfüllt** ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ — Stand: 2026-08-23 22:08 UTC.
+**Fortschritt: 0 / 11 Kriterien erfüllt** ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ — Stand: 2026-08-23 22:51 UTC.
 <!-- /c50:progress -->
 
 - [ ] ⬜ Übung 1: Anwendung vorhanden (app.py im Wurzel-Verzeichnis)
