@@ -1,5 +1,5 @@
 #!/bin/bash
-# PRAXIS Tag 16 — Container Teil 2 (Automatisierung mit GitHub Actions).
+# PRAXIS Tag 14 — Container Teil 2 (Automatisierung mit GitHub Actions).
 # Geprüft wird das Wurzel-Verzeichnis: die Workflows liegen in
 # .github/workflows/ — genau dort, wo GitHub Actions sie ausführt.
 source .github/classroom/grade.sh
@@ -20,7 +20,7 @@ solution_for_id() {
   esac
 }
 
-echo "🔍 Prüfe Abnahmekriterien für Tag 16 Praxis — Container-Automatisierung mit GitHub Actions"
+echo "🔍 Prüfe Abnahmekriterien für Tag 14 Praxis — Container-Automatisierung mit GitHub Actions"
 echo ""
 
 WF=.github/workflows
@@ -89,4 +89,4 @@ check "praxis-doku" \
   "Doku: DOKUMENTATION.md hat ausreichend Inhalt (mind. 100 Wörter)" \
   "[ \$(wc -w < $DOKU 2>/dev/null) -ge 100 ]"
 
-summary 16
+summary 14
