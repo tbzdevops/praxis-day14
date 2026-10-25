@@ -1,5 +1,6 @@
 #!/bin/bash
-# PRAXIS Tag 14 — Container Teil 2 (Automatisierung mit GitHub Actions).
+# PRAXIS Tag 14 — Container Teil 2: automatisierter Container-Build (CI).
+# Registry-Push und Deployment gehören seit der Kürzung zum Projekt.
 # Geprüft wird das Wurzel-Verzeichnis: die Workflows liegen in
 # .github/workflows/ — genau dort, wo GitHub Actions sie ausführt.
 source .github/classroom/grade.sh
@@ -8,75 +9,58 @@ solution_for_id() {
   case "$1" in
     app) echo "Lege app.py und requirements.txt im Wurzel-Verzeichnis an" ;;
     dockerfile) echo "Lege das Dockerfile im Wurzel-Verzeichnis an" ;;
-    ci-workflow) echo "Lege .github/workflows/aufgabe1.yml mit Container-Build an" ;;
-    ci-build) echo "Nutze docker/build-push-action oder 'docker build' im Workflow" ;;
-    ecr-workflow) echo "Lege .github/workflows/aufgabe2.yml für den ECR-Push an" ;;
-    aws-credentials) echo "Nutze aws-actions/configure-aws-credentials mit den AWS-Secrets" ;;
-    ecr-login) echo "Ergänze aws-actions/amazon-ecr-login und den Image-Push" ;;
-    ecs-workflow) echo "Lege .github/workflows/aufgabe3.yml für das ECS-Deployment an" ;;
-    ecs-deploy) echo "Ergänze das ECS-Deployment (amazon-ecs-deploy-task-definition oder aws ecs update-service)" ;;
-    praxis-doku) echo "Lege DOKUMENTATION.md im Wurzel-Verzeichnis an und dokumentiere die Pipeline (mind. 100 Wörter)" ;;
+    ci-workflow) echo "Lege .github/workflows/aufgabe1.yml an" ;;
+    ci-trigger) echo "Starte den Workflow bei jedem Push (on: push)" ;;
+    ci-build) echo "Baue das Image mit docker/build-push-action oder 'docker build'" ;;
+    ci-load) echo "Setze 'load: true' in docker/build-push-action, sonst findet 'docker run' das Image nicht" ;;
+    ci-test) echo "Starte den Container mit 'docker run' und prüfe die Antwort mit 'curl'" ;;
+    praxis-doku) echo "Lege DOKUMENTATION.md im Wurzel-Verzeichnis an und beantworte die drei Fragen (mind. 80 Wörter)" ;;
     *) echo "Überprüfe die Aufgabenstellung im README" ;;
   esac
 }
 
-echo "🔍 Prüfe Abnahmekriterien für Tag 14 Praxis — Container-Automatisierung mit GitHub Actions"
+echo "🔍 Prüfe Abnahmekriterien für Tag 14 Praxis — Automatisierter Container-Build mit GitHub Actions"
 echo ""
 
 WF=.github/workflows
 DOKU=DOKUMENTATION.md
 
-# classroom.yml gehoert zur Bewertung und darf kein Kriterium erfuellen.
+# classroom.yml gehört zur Bewertung und darf kein Kriterium erfüllen.
 all_wf() { ls $WF/*.yml $WF/*.yaml 2>/dev/null | grep -v '/classroom\.yml$'; }
-ecr_wf() { all_wf | xargs -r grep -lEi 'ecr' 2>/dev/null; }
-ecs_wf() { all_wf | xargs -r grep -lEi 'ecs' 2>/dev/null; }
 ALL="$(all_wf | tr '\n' ' ')/dev/null"
-ECR="$(ecr_wf | tr '\n' ' ')/dev/null"
-ECS="$(ecs_wf | tr '\n' ' ')/dev/null"
 
-echo "── Übung 1: Automatisierter Build mit GitHub Actions ──"
+echo "── Anwendung ──"
 
 check "app" \
-  "Übung 1: Anwendung vorhanden (app.py im Wurzel-Verzeichnis)" \
-  "[ -f app.py ]"
+  "Anwendung vorhanden (app.py und requirements.txt im Wurzel-Verzeichnis)" \
+  "[ -f app.py ] && [ -f requirements.txt ]"
 
 check_file_exists "dockerfile" \
-  "Übung 1: Dockerfile vorhanden (Wurzel-Verzeichnis)" \
+  "Dockerfile vorhanden (Wurzel-Verzeichnis)" \
   "Dockerfile"
 
+echo ""
+echo "── CI-Workflow ──"
+
 check "ci-workflow" \
-  "Übung 1: Workflow vorhanden (.github/workflows/)" \
+  "Workflow vorhanden (.github/workflows/)" \
   "all_wf | grep -q ."
 
+check "ci-trigger" \
+  "Workflow startet bei jedem Push (on: push)" \
+  "grep -qE '^[[:space:]]*push:|^on:[[:space:]]*\[?[[:space:]]*push' $ALL"
+
 check "ci-build" \
-  "Übung 1: Container-Image wird im Workflow gebaut" \
-  "grep -qiE 'docker/build-push-action|docker build|buildx' $ALL"
+  "Container-Image wird im Workflow gebaut" \
+  "grep -qiE 'docker/build-push-action|docker build|buildx build' $ALL"
 
-echo ""
-echo "── Übung 2: Container Registry (Image Push zu AWS ECR) ──"
+check "ci-load" \
+  "Gebautes Image steht für den Test bereit (load: true oder docker build)" \
+  "grep -qE 'load:[[:space:]]*true|docker build' $ALL"
 
-check "ecr-workflow" \
-  "Übung 2: Workflow mit ECR-Bezug vorhanden" \
-  "ecr_wf | grep -q ."
-
-check "aws-credentials" \
-  "Übung 2: AWS-Credentials als GitHub Secrets referenziert" \
-  "grep -qE 'secrets\.AWS_|configure-aws-credentials' $ECR"
-
-check "ecr-login" \
-  "Übung 2: ECR-Login und Image-Push vorhanden" \
-  "grep -qiE 'amazon-ecr-login|ecr' $ECR && grep -qiE 'push' $ECR"
-
-echo ""
-echo "── Übung 3: Continuous Deployment auf AWS ECS ──"
-
-check "ecs-workflow" \
-  "Übung 3: Workflow mit ECS-Deployment vorhanden" \
-  "ecs_wf | grep -q ."
-
-check "ecs-deploy" \
-  "Übung 3: ECS-Service wird aktualisiert (Deploy-Schritt)" \
-  "grep -qiE 'amazon-ecs-deploy|ecs update-service|task-definition' $ECS"
+check "ci-test" \
+  "Container wird gestartet und per HTTP getestet (docker run + curl)" \
+  "grep -q 'docker run' $ALL && grep -qE 'curl[[:space:]]' $ALL"
 
 echo ""
 echo "── Dokumentation ──"
@@ -86,7 +70,7 @@ check_file_exists "praxis-doku" \
   "$DOKU"
 
 check "praxis-doku" \
-  "Doku: DOKUMENTATION.md hat ausreichend Inhalt (mind. 100 Wörter)" \
-  "[ \$(wc -w < $DOKU 2>/dev/null) -ge 100 ]"
+  "Doku: DOKUMENTATION.md hat ausreichend Inhalt (mind. 80 Wörter)" \
+  "[ \$(wc -w < $DOKU 2>/dev/null) -ge 80 ]"
 
 summary 14

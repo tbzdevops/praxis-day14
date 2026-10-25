@@ -1,91 +1,77 @@
-# Tag 14 Praxis — Container-Automatisierung mit GitHub Actions
+# Tag 14 Praxis — Automatisierter Container-Build mit GitHub Actions
 
-> **Praxisauftraege.** Dieses Repository ist dein Arbeitsplatz fuer die
-> Praxis-Uebungen von Tag 14. Es enthaelt bewusst nur das Geruest —
-> jede Datei schreibst du selbst.
+> **Praxisauftrag.** Dieses Repository ist dein Arbeitsplatz für die
+> Praxis-Übung von Tag 14. Es enthält bewusst nur das Gerüst, jede Datei
+> schreibst du selbst.
 
 ## Ausgangslage
 
-Von der CI-Pipeline fuer Container-Builds ueber den Registry-Push bis zum
-Cloud-Deployment: CI-Build (Uebung 1), Image-Push zu AWS ECR (Uebung 2) und
-Continuous Deployment auf AWS ECS (Uebung 3). Die Uebungen bauen
-aufeinander auf.
+Du baust eine CI-Pipeline für ein Container-Image: Bei jedem Push baut GitHub
+Actions das Image, startet den Container und prüft per HTTP, ob die Anwendung
+antwortet. Registry-Push (AWS ECR) und Deployment (AWS EC2) folgen danach im
+Projekt am TechStyle-Shop.
 
 ## Ordnerstruktur
 
-Alle Dateien gehoeren ins **Wurzel-Verzeichnis** dieses Repos bzw. in
-`.github/workflows/` — nur dort fuehrt GitHub Actions Workflows aus. Lege
-keine Unterordner pro Uebung an; die automatische Pruefung sucht die
-Dateien genau hier.
+Alle Dateien gehören ins **Wurzel-Verzeichnis** dieses Repos bzw. in
+`.github/workflows/`. Nur dort führt GitHub Actions Workflows aus. Lege keine
+Unterordner an, die automatische Prüfung sucht die Dateien genau hier.
 
 ```
-app.py                          # Uebung 1: Anwendung (z. B. Flask, Port 8080)
-requirements.txt                # Uebung 1
-Dockerfile                      # Uebung 1
-.github/workflows/aufgabe1.yml  # Uebung 1: CI-Build
-.github/workflows/aufgabe2.yml  # Uebung 2: Push zu AWS ECR
-.github/workflows/aufgabe3.yml  # Uebung 3: Deploy zu AWS ECS
-DOKUMENTATION.md                # deine Pipeline-Doku
+app.py                          # Flask-Anwendung, Port 8080
+requirements.txt                # flask
+Dockerfile
+.github/workflows/aufgabe1.yml  # CI-Build mit Container-Test
+DOKUMENTATION.md                # Antworten auf die drei Fragen
 ```
 
-## Aufgaben
+## Aufgabe
 
-### Uebung 1 — Automatisierter Build mit GitHub Actions (CI-Pipeline)
+Die vollständige Schritt-für-Schritt-Anleitung mit allen Dateiinhalten steht
+in der Tagesplanung von Tag 14.
 
-- Lege im Wurzel-Verzeichnis eine kleine Anwendung an: `app.py`
-  (z. B. Flask, Port 8080), `requirements.txt` und ein `Dockerfile`.
-- Lege `.github/workflows/aufgabe1.yml` an, das das Container-Image baut
-  (`docker/setup-buildx-action` und `docker/build-push-action` oder
-  `docker build`).
-
-### Uebung 2 — Container Registry: Image-Push zu AWS ECR
-
-- Erweitere die Pipeline zu `.github/workflows/aufgabe2.yml`.
-- Authentifiziere dich mit `aws-actions/configure-aws-credentials@v4` und
-  den Secrets `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
-- Melde dich mit `aws-actions/amazon-ecr-login` an und pushe das Image in
-  dein ECR-Repository.
-
-### Uebung 3 — Continuous Deployment auf AWS ECS
-
-- Erweitere die Pipeline zu `.github/workflows/aufgabe3.yml`.
-- Aktualisiere die ECS Task Definition und den Service
-  (`aws-actions/amazon-ecs-deploy-task-definition` oder
-  `aws ecs update-service`).
-- Benoetigte Variablen: `ECS_CLUSTER`, `ECS_SERVICE`, `ECS_TASK_DEFINITION`.
-- Dokumentiere die Pipeline in `DOKUMENTATION.md`.
+1. Lege `app.py`, `requirements.txt` und das `Dockerfile` an.
+2. Lege `.github/workflows/aufgabe1.yml` an. Der Workflow startet bei jedem
+   Push auf `main`, baut das Image mit `docker/build-push-action` (mit
+   `load: true`), startet den Container mit `docker run` und prüft die Antwort
+   mit `curl`.
+3. Pushe und beobachte den Lauf im Tab **Actions**, bis er grün ist.
+4. Ändere den Antworttext in `app.py`, pushe und prüfe, dass der Lauf rot wird.
+   Stelle den Text danach wieder her.
+5. Beantworte in `DOKUMENTATION.md` (mind. 80 Wörter):
+   - Welche Schritte führt die Pipeline aus, und in welcher Reihenfolge?
+   - Warum ist `load: true` nötig?
+   - Welche zwei Schritte fehlen noch bis zum laufenden Container in der Cloud?
 
 ## Abnahmekriterien
 
-Diese Kriterien prueft die Pipeline bei jedem Push automatisch. **Die Haken
-setzt die Pipeline selbst:** ein erfuelltes Kriterium wird abgehakt, und
-sobald eine Aenderung es wieder bricht, verschwindet der Haken. Du musst hier
-nichts von Hand pflegen — beim naechsten Push wird die Liste ueberschrieben.
+Diese Kriterien prüft die Pipeline bei jedem Push automatisch. **Die Haken
+setzt die Pipeline selbst:** Ein erfülltes Kriterium wird abgehakt, und
+sobald eine Änderung es wieder bricht, verschwindet der Haken. Du musst hier
+nichts von Hand pflegen, beim nächsten Push wird die Liste überschrieben.
 
 <!-- c50:progress -->
-**Fortschritt: 0 / 11 Kriterien erfüllt** ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ — Stand: 2026-08-24 21:17 UTC.
+**Fortschritt: 0 / 9 Kriterien erfüllt** ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
 <!-- /c50:progress -->
 
-- [ ] ⬜ Übung 1: Anwendung vorhanden (app.py im Wurzel-Verzeichnis)
-- [ ] ⬜ Übung 1: Dockerfile vorhanden (Wurzel-Verzeichnis)
-- [ ] ⬜ Übung 1: Workflow vorhanden (.github/workflows/)
-- [ ] ⬜ Übung 1: Container-Image wird im Workflow gebaut
-- [ ] ⬜ Übung 2: Workflow mit ECR-Bezug vorhanden
-- [ ] ⬜ Übung 2: AWS-Credentials als GitHub Secrets referenziert
-- [ ] ⬜ Übung 2: ECR-Login und Image-Push vorhanden
-- [ ] ⬜ Übung 3: Workflow mit ECS-Deployment vorhanden
-- [ ] ⬜ Übung 3: ECS-Service wird aktualisiert (Deploy-Schritt)
+- [ ] ⬜ Anwendung vorhanden (app.py und requirements.txt im Wurzel-Verzeichnis)
+- [ ] ⬜ Dockerfile vorhanden (Wurzel-Verzeichnis)
+- [ ] ⬜ Workflow vorhanden (.github/workflows/)
+- [ ] ⬜ Workflow startet bei jedem Push (on: push)
+- [ ] ⬜ Container-Image wird im Workflow gebaut
+- [ ] ⬜ Gebautes Image steht für den Test bereit (load: true oder docker build)
+- [ ] ⬜ Container wird gestartet und per HTTP getestet (docker run + curl)
 - [ ] ⬜ Doku: DOKUMENTATION.md vorhanden
-- [ ] ⬜ Doku: DOKUMENTATION.md hat ausreichend Inhalt (mind. 100 Wörter)
+- [ ] ⬜ Doku: DOKUMENTATION.md hat ausreichend Inhalt (mind. 80 Wörter)
 
-Zusaetzlich manuell abgenommen (nicht automatisch geprueft):
+Zusätzlich manuell abgenommen (nicht automatisch geprüft):
 
-- ECR-Repository und ECS-Cluster im AWS-Lab angelegt
-- End-to-End getestet: Push loest Build, Registry-Push und Deployment aus
+- Ein Lauf «CI Build» ist grün
+- Ein absichtlich kaputter Commit hat den Lauf rot gemacht
 
-## Abnahmekriterien selber pruefen
+## Abnahmekriterien selber prüfen
 
-**Lokal** — jederzeit, ohne Push:
+**Lokal**, jederzeit und ohne Push:
 
 ```bash
 bash .github/classroom/grade.sh
@@ -99,21 +85,21 @@ CLASSROOM_DAY=14 bash .github/classroom/grade.sh
 ```
 
 Die Ausgabe listet jedes Kriterium mit ✅ oder ❌ und nennt bei jedem ❌
-den konkreten Loesungshinweis. Sobald ein Kriterium fehlt, endet das
+den konkreten Lösungshinweis. Sobald ein Kriterium fehlt, endet das
 Skript mit Exit-Code 1.
 
-**In GitHub** — bei jedem Push:
+**In GitHub**, bei jedem Push:
 
-Der Workflow **🎓 Classroom Autograding** laeuft automatisch und hakt die
-erfuellten Kriterien oben im README ab. Ergebnis im Tab **Actions** →
-letzter Run → Job *Abnahmekriterien pruefen*.
+Der Workflow **🎓 Classroom Autograding** läuft automatisch und hakt die
+erfüllten Kriterien oben im README ab. Ergebnis im Tab **Actions** →
+letzter Run → Job *Abnahmekriterien prüfen*.
 
-Die Punktzahl ist **anteilig**: jedes erfuellte Abnahmekriterium zaehlt einen
-Punkt (z. B. `Points 8/13`). Gruen wird der Lauf erst, wenn alle Kriterien
-erfuellt sind — Teilpunkte gibt es aber ab dem ersten.
+Die Punktzahl ist **anteilig**: Jedes erfüllte Abnahmekriterium zählt einen
+Punkt (z. B. `Points 5/9`). Grün wird der Lauf erst, wenn alle Kriterien
+erfüllt sind, Teilpunkte gibt es aber ab dem ersten.
 
-## Musterloesung
+## Musterlösung
 
-Nach dem Unterricht findest du die Musterloesung im Repository
+Nach dem Unterricht findest du die Musterlösung im Repository
 [`tbzdevops/musterloesungen-praxisauftraege`](https://github.com/tbzdevops/musterloesungen-praxisauftraege/tree/day_14_solution)
 auf dem Branch `day_14_solution`.
